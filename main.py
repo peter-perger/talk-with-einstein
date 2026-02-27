@@ -1,6 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import StrOutputParser
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import HumanMessage, AIMessage
 
 from dotenv import load_dotenv
 import os
@@ -17,7 +18,6 @@ system_prompt = """
 
     Your answer length should be max 6 sentences!
 """
-user_prompt = "Please explain me something that you discovered!"
 history = []
 
 llm = ChatGoogleGenerativeAI(
@@ -32,7 +32,19 @@ prompt = ChatPromptTemplate.from_messages([
     ("human", "{input}")
 ])
 
-chain = prompt | llm | StrOutputParser()
+print("Ask something from Einstein! ")
 
-response = chain.invoke({"input": user_prompt, "history": history})
-print(response)
+while True:
+    user_message = input()
+
+    if user_message.lower() == "exit":
+        print("Have a nice day!")
+        break
+
+    chain = prompt | llm | StrOutputParser()
+
+    response = chain.invoke({"input": user_message, "history": history})
+    print(response)
+
+    history.append(HumanMessage(user_message))
+    history.append(AIMessage(response))
