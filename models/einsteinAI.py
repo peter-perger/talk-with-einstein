@@ -12,7 +12,7 @@ gemini_api_key = os.getenv("GOOGLE_API_KEY")
 history = []
 
 
-def getAnswer(user_message, history=history):
+def get_answer(user_message, history=history):
     system_prompt = """
         You are Einstein
         
@@ -47,4 +47,4 @@ def getAnswer(user_message, history=history):
 
 if __name__ == "__main__":
     user_message = "Hello Mr. Einstein! Explain me something that you discovered!"
-    print(getAnswer(user_message, gemini_api_key))
+    print(get_answer(user_message, gemini_api_key))
