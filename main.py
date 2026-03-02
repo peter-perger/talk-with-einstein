@@ -1,18 +1,15 @@
-from functions import chat
+from functions import chat, clear_chat
 import gradio as gr
 
 custom_css = """
 .gradio-container {
-    max-width: 1300px !important; 
+    width: 900px !important;
     margin: 0 auto;
 }
 """
 
 
-page = gr.Blocks(
-    title="Chat with Einstein",
-    css=custom_css
-)
+page = gr.Blocks(title="Chat with Einstein")
 
 with page:
     gr.Markdown(
@@ -22,13 +19,17 @@ with page:
         """
     )
 
-    chatbot = gr.Chatbot()
+    chatbot = gr.Chatbot(
+        avatar_images=[None, './images/einstein.svg'],
+        show_label=False
+    )
 
-    msg = gr.Textbox()
+    msg = gr.Textbox(show_label=False, placeholder="Send message")
     msg.submit(chat, [msg, chatbot], [msg, chatbot])
 
     clear = gr.Button("Clear chat")
-    clear.click()
+    clear.click(clear_chat, outputs=[msg, chatbot])
 
 
-page.launch(theme=gr.themes.Soft())
+page.launch(theme=gr.themes.Soft(),
+            css=custom_css)

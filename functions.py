@@ -7,6 +7,8 @@ def chat(user_input, chat_history):
     chat_history.append({'role': 'user', 'content': user_input})
     chat_history.append({'role': 'assistant', 'content': answer})
 
-    print(chat_history)
-
     return user_input, chat_history
+
+
+def clear_chat():
+    return "", []
