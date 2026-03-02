@@ -1,16 +1,34 @@
-from functions.handle_input import handle_input
-import streamlit as st
+from functions import chat
+import gradio as gr
+
+custom_css = """
+.gradio-container {
+    max-width: 1300px !important; 
+    margin: 0 auto;
+}
+"""
 
 
-st.title("Talk with Einstein!")
-st.write("Welcome to a digital bridge across time. This platform isn't just a chat interface; it is a specialized gateway designed to let you engage with the mind of Albert Einstein through the power of modern Generative AI.")
-
-st.text_input(label="📜🧝", key="user_input", on_change=handle_input)
-
-st.text_area(
-    label="Einstein answer",
-    key="einstein_answer",
-    height=200
+page = gr.Blocks(
+    title="Chat with Einstein",
+    css=custom_css
 )
 
-st.write("Powered by <strong>Perger Peter</strong>", unsafe_allow_html=True)
+with page:
+    gr.Markdown(
+        """
+        # Chat with Einstein
+        Welcome to your personal Einstein assistant!
+        """
+    )
+
+    chatbot = gr.Chatbot()
+
+    msg = gr.Textbox()
+    msg.submit(chat, [msg, chatbot], [msg, chatbot])
+
+    clear = gr.Button("Clear chat")
+    clear.click()
+
+
+page.launch(theme=gr.themes.Soft())
