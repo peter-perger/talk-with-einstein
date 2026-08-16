@@ -1,24 +1,27 @@
-from langchain.chat_models import init_chat_model
-from pprint import pprint
-from dotenv import load_dotenv
-import os
+from einstein import get_ai_message
+import streamlit as st
 
-load_dotenv()
+st.set_page_config(page_title="Talk with Einstein", page_icon="🧠")
 
+st.title("Talk With Einstein")
 
-gemini_api_key = os.getenv("GEMINI_API_KEY")
-print(gemini_api_key)
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Hello! How can I help you today?"}
+    ]
 
-model = init_chat_model(
-    model="gemini-3-flash-preview",
-    model_provider="google-genai",
-    api_key = gemini_api_key
-)
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-promt = """In your answers act lice Albert Einstein.
-            Tell a story for me about your life Your answer
-            maxt length is about  sentence"""
+if prompt := st.chat_input("Type your message here..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
 
-response = model.invoke(promt)
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-print(response.content[0]["text"])
+    with st.chat_message("assistant"):
+        assistant_message = get_ai_message(prompt)
+        st.markdown(assistant_message)
+
+    st.session_state.messages.append({"role": "assistant", "content": assistant_message})
